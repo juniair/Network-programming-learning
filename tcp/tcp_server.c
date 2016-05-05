@@ -9,7 +9,7 @@
 #define BUF_SIZE 1024
 #define SERVER_NAME "Server"
 // 에러 처리 함수
-void excption(char* message);
+void error_handling(char *message)
 
 int main(int argc, char* argv[])
 {
@@ -45,14 +45,15 @@ int main(int argc, char* argv[])
 		excption("listen() error");
 	}
 	
+	clnt_sock_size = sizeof(clnt_addr);
+	clnt_sock = accept(serv_sock, (struct sockaddr*)&clnt_addr, &clnt_sock_size); // 연결 확인
+	if (clnt_sock == -1)
+	{
+		excption("accept() error");
+	}
+		
 	while(1)
 	{
-		clnt_sock_size = sizeof(clnt_addr);
-		clnt_sock = accept(serv_sock, (struct sockaddr*)&clnt_addr, &clnt_sock_size); // 연결 확인
-		if(clnt_sock == -1)
-		{
-			excption("accept() error");
-		}
 		
 		if(read(clnt_sock, message, sizeof(message)) == 0) // 클라이언트의 메시지를 우선적으로 받는다.
 		{
@@ -90,7 +91,7 @@ int main(int argc, char* argv[])
 	exit(0);
 }
 
-void excption(char* message)
+void error_handling(char *message)
 {
 	fputs(message, stderr);
 	fputc('\n', stderr);
