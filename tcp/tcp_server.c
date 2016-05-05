@@ -49,6 +49,7 @@ int main(int argc, char* argv[])
 		error_handling("listen() error");
 	}
 	
+
 		
 	while (1)
 	{
@@ -64,7 +65,7 @@ int main(int argc, char* argv[])
 		printf("%s: %s", CLIENT_NAME, clnt_msg);
 		printf("%s: ", SERVER_NAME);
 		fgets(serv_msg, BUF_SIZE, stdin);
-		wrtie(clnt_sock, serv_msg, sizeof(serv_msg));
+		write(clnt_sock, serv_msg, sizeof(serv_msg));
 		if (!strcmp(serv_msg, "q\n") || !strcmp(serv_msg, "Q\n"))
 		{
 			break;
