@@ -46,27 +46,36 @@ int main(int argc, char* argv[])
 	
 	while (1)
 	{
+		// 클라이언트의 메시지 입력 시작
 		printf("%s: ", CLIENT_NAME);
 		fgets(clnt_msg, BUF_SIZE, stdin);
-				
+		
+		// 클라이언트 종료 여부 판독
 		if (!strcmp(clnt_msg, "q\n") || !strcmp(clnt_msg, "Q\n"))
 		{
+			// 서버에 종료 하겠다는 메시지를 보낸다.
 			write(sock, clnt_msg, sizeof(clnt_msg));
-			break;
+			break; // while문 종료
 		}
 		
+		// 서버에 클라이언트 메시지 전달
 		write(sock, clnt_msg, sizeof(clnt_msg));
+		// 서버에서 클라이언트의 메시지를 읽는다.
 		read(sock, serv_msg, sizeof(serv_msg));
+
+		// 서버에서 종료 메시지 전달 여부 확인
 		if (!strcmp(serv_msg, "q\n") || !strcmp(serv_msg, "Q\n"))
 		{
-			printf("Server down\n");
-			break;
+			printf("Server down\n");	// 종료시 서버 다운 메시지 출력
+			break;	// while문 탈출
 		}
-		printf("%s: %s", SERVER_NAME, serv_msg);
+
+		printf("%s: %s", SERVER_NAME, serv_msg);	// 종료 메시지가 아닐시 서버에서 보낸 메시지 출력
 	}
+
+	// 소켓을 닫는다.
 	close(sock);
 	exit(0);
-	
 }
 
 void error_handling(char* message)
