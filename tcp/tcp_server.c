@@ -20,6 +20,7 @@ int main(int argc, char* argv[])
 	socklen_t clnt_sock_size;
 	char serv_msg[BUF_SIZE], clnt_msg[BUF_SIZE];
 	int str_len;
+	
 
 	if(argc != 2)
 	{
@@ -43,7 +44,7 @@ int main(int argc, char* argv[])
 		error_handling("bind() error");
 	}
 
-	if(listen(serv_sock, 0) == -1)
+	if(listen(serv_sock, 5) == -1)
 	{
 		error_handling("listen() error");
 	}
@@ -60,19 +61,19 @@ int main(int argc, char* argv[])
 		
 		str_len = read(clnt_sock, clnt_msg, BUF_SIZE);
 
-		if (!strcmp(clnt_msg, "q\n") || !strcmp(clnt_msg, "Q\n")
+		if (!strcmp(clnt_msg, "q\n") || !strcmp(clnt_msg, "Q\n"))
 		{
 			printf("%s: Bye!\n", CLIENT_NAME);
 			close(clnt_sock);
 		}
-
-		printf("%s: ", SERVER_NAME);
+		printf("%s: %s", CLIENT_NAME, clnt_msg);
+		/*printf("%s: ", SERVER_NAME);
 		fgets(serv_msg, BUF_SIZE, stdin);
 		wrtie(clnt_sock, serv_msg, sizeof(serv_msg));
 		if (!strcmp(serv_msg, "q\n") || !strcmp(serv_msg, "Q\n"))
 		{
 			break;
-		}
+		}*/
 	}
 
 	close(serv_sock);
