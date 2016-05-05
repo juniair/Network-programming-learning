@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 	
 	printf("Welcome to 'Hello Server'\n");
 	sprintf(clnt_msg, "Hi Server!\n");
-	printf("%s: Hi Client", SERVER_NAME);
+	printf("%s: Hi Client!\n", SERVER_NAME);
 	write(sock, clnt_msg, sizeof(clnt_msg));
 
 	while (1)
@@ -64,16 +64,14 @@ int main(int argc, char* argv[])
 		else
 		{
 			sprintf(clnt_msg, "%s: %s", CLIENT_NAME, clnt_msg);
-			switch (write(sock, serv_msg, BUF_SIZE))
+			switch (write(sock, clnt_msg, BUF_SIZE))
 			{
 				case -1:
 					error_handling("write() error.");
-					break;
 				case 0:
 					printf("peer connection closed.");
 					close(sock);
 					exit(EXIT_SUCCESS);
-					break;
 				default:		
 					read(sock, serv_msg, BUF_SIZE);
 					if (!strcmp(serv_msg, "q\n") || !strcmp(serv_msg, "Q\n"))
