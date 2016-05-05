@@ -61,13 +61,13 @@ int main(int argc, char* argv[])
 		}
 		
 		write(sock, clnt_msg, sizeof(clnt_msg));
-		/*read(sock, serv_msg, sizeof(serv_msg));
+		read(sock, serv_msg, sizeof(serv_msg));
 		if (!strcmp(serv_msg, "q\n") || !strcmp(serv_msg, "Q\n"))
 		{
 			printf("Server down\n");
 			break;
 		}
-		printf("%s: %s", SERVER_NAME, serv_msg);*/
+		printf("%s: %s", SERVER_NAME, serv_msg);
 	}
 	close(sock);
 	exit(0);
