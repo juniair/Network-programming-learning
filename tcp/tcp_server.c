@@ -7,16 +7,19 @@
 #include <sys/socket.h>
 
 #define BUF_SIZE 1024
-#define SERVER_NAME "Server"
+#define SERVER_NAME "[Server]"
+#define CLIENT_NAME "[Client]"
+
 // 에러 처리 함수
-void error_handling(char *message)
+void error_handling(char *message);
 
 int main(int argc, char* argv[])
 {
 	int serv_sock, clnt_sock;
 	struct sockaddr_in serv_addr, clnt_addr;
 	socklen_t clnt_sock_size;
-	char message[BUF_SIZE];
+	char serv_msg[BUF_SIZE], clnt_msg[BUF_SIZE];
+	int str_len;
 
 	if(argc != 2)
 	{
@@ -27,7 +30,7 @@ int main(int argc, char* argv[])
 	serv_sock = socket(PF_INET, SOCK_STREAM, 0);
 	if(serv_sock == -1)
 	{
-		excption("socket() error");
+		error_handling("socket() error");
 	}
 
 	memset(&serv_addr, 0 , sizeof(serv_addr));
@@ -37,58 +40,69 @@ int main(int argc, char* argv[])
 
 	if(bind(serv_sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1)
 	{
-		excption("bind() error");
+		error_handling("bind() error");
 	}
 
-	if(listen(serv_sock, 5) == -1)
+	if(listen(serv_sock, 0) == -1)
 	{
-		excption("listen() error");
+		error_handling("listen() error");
 	}
 	
-	clnt_sock_size = sizeof(clnt_addr);
-	clnt_sock = accept(serv_sock, (struct sockaddr*)&clnt_addr, &clnt_sock_size); // 연결 확인
-	if (clnt_sock == -1)
+			
+	while (1)
 	{
-		excption("accept() error");
-	}
-		
-	while(1)
-	{
-		
-		if(read(clnt_sock, message, sizeof(message)) == 0) // 클라이언트의 메시지를 우선적으로 받는다.
+		clnt_sock_size = sizeof(clnt_addr);
+		clnt_sock = accept(serv_sock, (struct sockaddr*)&clnt_addr, &clnt_sock_size); // 연결 확인
+		if (clnt_sock == -1)
 		{
-			continue;
+			error_handling("accept() error");
 		}
-		else	// 클라이언트에게 메시지 도착
-		{
-			// 클라이언트가 연결이 종료 요청일때 
-			if(!strcmp(message, "q\n") || !strcmp(message, "Q\n"))
-			{
-				printf("[Client]: Bye Server!\n");
-				close(clnt_sock);	// 새로운 클라이언트를 받은 준비를함
-			}
-			else	// 클라이언트가 채팅 메시지가 옴
-			{
-				printf("%s", message);	// 클라이언트가 보낸 메시지 출력
-				fgets(message, BUF_SIZE,  stdin);	// 서버는 클라이언트에게 보낼 메시지 입력
-
-				// 서버 종료일 경우 다음 문장 수행
-				if(!strcmp(message, "q\n") || !strcmp(message, "Q\n"))
+		
+		switch (read(clnt_sock, clnt_msg, BUF_SIZE)) 
+		{	
+			case -1:
+				error_handling("read() error.");
+				break;
+			case 0:
+				printf("peer connection closed.");
+				break;
+			default:
+				if (!strcmp(clnt_msg, "q\n") || !strcmp(clnt_msg, "Q\n"))
 				{
-					sprintf(message, "Server shutdown\n");
-					break;	// while문 탈출
+					printf("%s: Bye Server!\n", CLIENT_NAME);
+					close(clnt_sock);
 				}
-				sprintf(message, "%s: %s", SERVER_NAME, message);
-				write(clnt_sock, message, sizeof(message));
-			}
+				else
+				{
+					printf("%s: %s", CLIENT_NAME, clnt_msg);
+				}	
 		}
+		fgets(serv_msg, BUF_SIZE, stdin);
+		switch (write(clnt_sock, serv_msg, BUF_SIZE)) 
+		{	
+			case -1:
+				error_handling("write() error.");
+				break;
+			case 0:
+				printf("peer connection closed.");
+				break;
+			default:
+				if (!strcmp(serv_msg, "q\n") || !strcmp(serv_msg, "Q\n"))
+				{
+					close(clnt_sock);
+					close(serv_sock);
+					exit(0);
+				}
+				else
+				{
+					printf("%s: %s", CLIENT_NAME, clnt_msg);
+				}	
+		}
+		
+			
 	}
 
-	write(clnt_sock, message, sizeof(message));
-	close(clnt_sock);
-	close(serv_sock);
 
-	exit(0);
 }
 
 void error_handling(char *message)
