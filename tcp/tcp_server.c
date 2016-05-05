@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 {
 	int serv_sock, clnt_sock;
 	struct sockaddr_in serv_addr, clnt_addr;
-	socklen_t clnt_sock_size;
+	socklen_t clnt_addr_size;
 	char serv_msg[BUF_SIZE], clnt_msg[BUF_SIZE];
 	int str_len;
 	
@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
 	}
 	
 	clnt_addr_size = sizeof(clnt_addr);
-	clnt_sock = accept(serv_sock, (struct sockaddr*)&clnt_addr, &clnt_addr);
+	clnt_sock = accept(serv_sock, (struct sockaddr*)&clnt_addr, &clnt_addr_size);
 
 	if (clnt_sock == -1)
 	{
