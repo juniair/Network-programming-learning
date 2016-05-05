@@ -45,8 +45,8 @@ int main(int argc, char* argv[])
 	}
 	
 	printf("Welcome to 'Hello Server'\n");
-	sprintf(clnt_msg, "%s: Hi Server!\n", CLIENT_NAME);
-	printf("%s", clnt_msg);
+	sprintf(clnt_msg, "Hi Server!\n");
+	printf("%s: Hi Client", SERVER_NAME);
 	write(sock, clnt_msg, sizeof(clnt_msg));
 
 	while (1)
