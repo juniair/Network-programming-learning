@@ -49,11 +49,16 @@ int main(int argc, char* argv[])
 		error_handling("listen() error");
 	}
 	
+	clnt_addr_size = sizeof(clnt_addr);
+	clnt_sock = accept(serv_sock, (struct sockaddr*)&clnt_addr, &clnt_addr);
 
+	if (clnt_sock == -1)
+	{
+		error_handling("accept() error.");
+	}
 		
 	while (1)
 	{
-		
 		
 		str_len = read(clnt_sock, clnt_msg, BUF_SIZE);
 
