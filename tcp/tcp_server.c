@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 	struct sockaddr_in serv_addr, clnt_addr;
 	socklen_t clnt_addr_size;
 	char serv_msg[BUF_SIZE], clnt_msg[BUF_SIZE];
-	int str_len;
+	int flag = 0;
 	
 
 	if(argc != 2)
@@ -60,20 +60,23 @@ int main(int argc, char* argv[])
 	while (1)
 	{
 		
-		str_len = read(clnt_sock, clnt_msg, BUF_SIZE);
+		read(clnt_sock, clnt_msg, BUF_SIZE);
 
 		if (!strcmp(clnt_msg, "q\n") || !strcmp(clnt_msg, "Q\n"))
 		{
 			printf("%s: Bye!\n", CLIENT_NAME);
-			close(clnt_sock);
-		}
-		printf("%s: %s", CLIENT_NAME, clnt_msg);
-		printf("%s: ", SERVER_NAME);
-		fgets(serv_msg, BUF_SIZE, stdin);
-		write(clnt_sock, serv_msg, sizeof(serv_msg));
-		if (!strcmp(serv_msg, "q\n") || !strcmp(serv_msg, "Q\n"))
-		{
 			break;
+		}
+		else
+		{
+			printf("%s: %s", CLIENT_NAME, clnt_msg);					
+			printf("%s: ", SERVER_NAME);
+			fgets(serv_msg, BUF_SIZE, stdin);
+			write(clnt_sock, serv_msg, sizeof(serv_msg));
+			if (!strcmp(serv_msg, "q\n") || !strcmp(serv_msg, "Q\n"))
+			{
+				break;
+			}	
 		}
 	}
 

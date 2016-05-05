@@ -44,10 +44,10 @@ int main(int argc, char* argv[])
 		error_handling("connet() error");
 	}
 	
-	printf("Welcome to 'Hello Server'\n");
-	sprintf(clnt_msg, "Hi Server!\n");
-	printf("%s: Hi Client!\n", SERVER_NAME);
-	write(sock, clnt_msg, sizeof(clnt_msg));
+	//printf("Welcome to 'Hello Server'\n");
+	//sprintf(clnt_msg, "Hi Server!\n");
+	//printf("%s: Hi Client!\n", SERVER_NAME);
+	//write(sock, clnt_msg, sizeof(clnt_msg));
 
 	while (1)
 	{
@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
 		}
 		
 		write(sock, clnt_msg, sizeof(clnt_msg));
-		read(sock, serv_msg, sizeof(serv_msg));
+		read(sock, serv_msg, sizeof(serv_msg))
 		if (!strcmp(serv_msg, "q\n") || !strcmp(serv_msg, "Q\n"))
 		{
 			printf("Server down\n");
