@@ -75,30 +75,26 @@ int main(int argc, char* argv[])
 				else
 				{
 					printf("%s: %s", CLIENT_NAME, clnt_msg);
+					printf("%s: ", SERVER_NAME);
+					fgets(serv_msg, BUF_SIZE, stdin);
+					switch (write(clnt_sock, serv_msg, BUF_SIZE)) 
+					{	
+						case -1:
+							error_handling("write() error.");
+							break;
+						case 0:
+							printf("peer connection closed.");
+							break;
+						default:
+							if (!strcmp(serv_msg, "q\n") || !strcmp(serv_msg, "Q\n"))
+							{
+								close(clnt_sock);
+								close(serv_sock);
+								exit(0);
+							}	
+					}
 				}	
 		}
-		fgets(serv_msg, BUF_SIZE, stdin);
-		switch (write(clnt_sock, serv_msg, BUF_SIZE)) 
-		{	
-			case -1:
-				error_handling("write() error.");
-				break;
-			case 0:
-				printf("peer connection closed.");
-				break;
-			default:
-				if (!strcmp(serv_msg, "q\n") || !strcmp(serv_msg, "Q\n"))
-				{
-					close(clnt_sock);
-					close(serv_sock);
-					exit(0);
-				}
-				else
-				{
-					printf("%s: %s", CLIENT_NAME, clnt_msg);
-				}	
-		}
-		
 			
 	}
 
