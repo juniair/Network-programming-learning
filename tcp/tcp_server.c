@@ -49,15 +49,10 @@ int main(int argc, char* argv[])
 		error_handling("listen() error");
 	}
 	
-			
+		
 	while (1)
 	{
-		clnt_sock_size = sizeof(clnt_addr);
-		clnt_sock = accept(serv_sock, (struct sockaddr*)&clnt_addr, &clnt_sock_size); // 연결 확인
-		if (clnt_sock == -1)
-		{
-			error_handling("accept() error");
-		}
+		
 		
 		str_len = read(clnt_sock, clnt_msg, BUF_SIZE);
 
@@ -67,13 +62,13 @@ int main(int argc, char* argv[])
 			close(clnt_sock);
 		}
 		printf("%s: %s", CLIENT_NAME, clnt_msg);
-		/*printf("%s: ", SERVER_NAME);
+		printf("%s: ", SERVER_NAME);
 		fgets(serv_msg, BUF_SIZE, stdin);
 		wrtie(clnt_sock, serv_msg, sizeof(serv_msg));
 		if (!strcmp(serv_msg, "q\n") || !strcmp(serv_msg, "Q\n"))
 		{
 			break;
-		}*/
+		}
 	}
 
 	close(serv_sock);
