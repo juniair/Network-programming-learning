@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
 		
 		write(sock, clnt_msg, sizeof(clnt_msg));
 		read(sock, serv_msg, sizeof(serv_msg));
-		if (!strcmp(serv_msg, "q\n") || !strcmp(serv_msg, "Q\n")
+		if (!strcmp(serv_msg, "q\n") || !strcmp(serv_msg, "Q\n"))
 		{
 			printf("Server down\n");
 			break;

@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
 		printf("%s: ", SERVER_NAME);
 		fgets(serv_msg, BUF_SIZE, stdin);
 		wrtie(clnt_sock, serv_msg, sizeof(serv_msg));
-		if (!strcmp(serv_msg, "q\n") || !strcmp(serv_msg, "Q\n")
+		if (!strcmp(serv_msg, "q\n") || !strcmp(serv_msg, "Q\n"))
 		{
 			break;
 		}
