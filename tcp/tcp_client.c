@@ -57,36 +57,20 @@ int main(int argc, char* argv[])
 		if (!strcmp(clnt_msg, "q\n") || !strcmp(clnt_msg, "Q\n"))
 		{
 			write(sock, clnt_msg, sizeof(clnt_msg));
-			read(sock, serv_msg, sizeof(serv_msg));
-			printf("%s", serv_msg);
 			break;
 		}
-		else
-		{
-			sprintf(clnt_msg, "%s: %s", CLIENT_NAME, clnt_msg);
-			switch (write(sock, clnt_msg, BUF_SIZE))
-			{
-				case -1:
-					error_handling("write() error.");
-				case 0:
-					printf("peer connection closed.");
-					close(sock);
-					exit(EXIT_SUCCESS);
-				default:		
-					read(sock, serv_msg, BUF_SIZE);
-					if (!strcmp(serv_msg, "q\n") || !strcmp(serv_msg, "Q\n"))
-					{
-						printf("[SERVER]: Bye Clinet!\n");
-						close(sock);
-						exit(EXIT_SUCCESS);
-					}
-					printf("[SERVER]: %s", serv_msg);
-			}
 		
-			
+		write(sock, clnt_msg, sizeof(clnt_msg));
+		read(sock, serv_msg, sizeof(serv_msg));
+		if (!strcmp(serv_msg, "q\n") || !strcmp(serv_msg, "Q\n")
+		{
+			printf("Server down\n");
+			break;
 		}
-			
+		printf("%s: %s", SERVER_NAME, serv_msg);
 	}
+	close(sock);
+	exit(0);
 	
 }
 
